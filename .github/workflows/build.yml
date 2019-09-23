@@ -1,6 +1,5 @@
 name: ReverseShell Build
-on: [create]
-  types: [tag]
+on: [push]
  
 jobs:
 
