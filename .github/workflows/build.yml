@@ -1,5 +1,7 @@
 name: ReverseShell Build
-on: [push]
+on: [create]
+  types: [tag]
+ 
 jobs:
 
   build:
@@ -18,3 +20,10 @@ jobs:
 
     - name: Run Makefile
       run: make all
+      
+     - name: Publish
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: '*'
