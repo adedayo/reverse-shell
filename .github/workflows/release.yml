@@ -1,5 +1,9 @@
 name: ReverseShell Build
-on: [push]
+on:
+  push:
+    tags:
+      - "*"
+      - "*/*"
 
 jobs:
   build:
@@ -16,9 +20,7 @@ jobs:
         uses: actions/checkout@master
       - name: Run Makefile
         run: make all
-      - name: Upload artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release GitHub Actions
+        uses: technote-space/release-github-actions@v1
         with:
-          args: "bin/*"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
