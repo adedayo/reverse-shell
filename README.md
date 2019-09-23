@@ -23,7 +23,7 @@ The purpose is to help point out unsafe assumptions with a simple demo
 ## You need VPN, 2FA, etc in order to get on my network
 This tool completely bypasses your protection, all it needs is an insider willing to plant a tool such as this as a backdoor to give them persistent access which circumvents all your VPN and 2FA technologies.  
 
-Think of that sysadmin that is about to be fired. A disgruntled employee or other malicious insiders could build a similar tool to grant themselves 
+Think of that sysadmin that is about to be fired. A disgruntled employee or other malicious insiders could build a similar tool to grant themselves permanent access. 
 
 ## I will block netcat/nc installation on my systems
 Netcat is a very versatile and useful tool, which has very legitimate applications. However, it is also a traditional tool of choice for obtaining reverse shells. So, it may seem reasonable that blocking/blacklisting it may reduce the risk significantly.
