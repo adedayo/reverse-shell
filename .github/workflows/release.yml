@@ -14,11 +14,11 @@ jobs:
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@master
-      - name: Generate artifacts
-        uses: skx/github-action-build@master
+      - name: Run Makefile
+        run: make all
       - name: Upload artifacts
         uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "*-*"
+          args: "bin/*"
