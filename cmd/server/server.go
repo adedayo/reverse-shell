@@ -30,7 +30,7 @@ func main() {
 				Certificates: []tls.Certificate{cert},
 			}
 
-			host := "localhost"
+			host := ""
 			port := os.Args[1]
 			listener, err := tls.Listen("tcp", net.JoinHostPort(host, port), &config)
 
