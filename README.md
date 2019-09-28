@@ -38,6 +38,9 @@ The problem is that, unlike many similar approaches, this tool works over TLS, s
 ## I will use threat feeds to fingerprint all your command and control servers as well as certificates that may be used for TLS
 Good thinking, but this will not be a reliable or efficient method for detection. This is because the tool can be configured to communicate with any server of the attacker's choosing, so they can spin up a server anywhere in the world and install arbitrary certificates on it, and you are left chasing shadows 
 
+# What is the solution?
+You might be wondering ...
+
 ## What then is a reliable way to defend against this threat?
 There are two strong controls that you can apply to mitigate this threat:
 
