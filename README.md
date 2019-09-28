@@ -39,15 +39,17 @@ The problem is that, unlike many similar approaches, this tool works over TLS, s
 Good thinking, but this will not be a reliable or efficient method for detection. This is because the tool can be configured to communicate with any server of the attacker's choosing, so they can spin up a server anywhere in the world and install arbitrary certificates on it, and you are left chasing shadows 
 
 ## What then is a reliable way to defend against this threat?
-Many of the ideas suggested above, while not foolproof are part of a reasonable defense-in-depth strategy for mitigating this threat.
+There are two strong controls that you can apply to mitigate this threat:
 
-The key message is to *understand your network*! If you know precisely which remote servers and ports that they are allowed to communicate with, that is a great piece of information that can be used to reduce the threat. For example, you may whitelist precisely those remote servers and ports as the only outbound connections you wish to allow. 
+1. *Application Whitelisting*: allowing *only* the applications that you have explicitly permitted to run, to be run on your server, and only those! This is perhaps, the strongest control, but it is not guaranteed because one of your whitelisted applications may itself be compromised and be used as an attack vector.
+   
+2. *Network lock-down*: if your system does not need to go out to the Internet, block outbound and inbound connections on the firewalls and also using host-based firewalls. Note that even if you totally blocked outbound Internet access, it is not a guaranteed solution. This is because if the protected server is allowed to make outbound connections directly or indirectly to another internal system that in turn has the capability to make outbound Internet connection, this tool can be chained together starting from your sensitive system, and trampolining via other internal systems to ultimately reach one that could communicate directly outbound to the Internet.
 
-This does not entirely prevent the attack if it is possible that the attacker may have control of any of your whitelisted servers/ports. 
+Many of the ideas suggested above, while not foolproof, are part of a reasonable defense-in-depth strategy for mitigating this threat.
+
+The key message is to *understand your network and services*! If you know precisely which remote servers and ports that they are allowed to communicate with, that is a great piece of information that can be used to reduce the threat. For example, you may whitelist precisely those remote servers and ports as the only outbound connections you wish to allow as well as which applications are allowed to connect on which ports and to what destinations. 
 
 Where outbound Internet connection is necessary, *consider network anomaly detection* to help you _possibly_ detect unusual connections that may be an indicator of compromise.
-
-Even, if you totally blocked outbound Internet access, it is not a guaranteed solution. This is because if the protected server is allowed to make outbound connections directly or indirectly to another internal system that in turn has the capability to make outbound Internet connection, this tool can be chained together starting from your sensitive system, and trampolining via other internal systems to ultimately reach one that could communicate directly outbound to the Internet.
 
 
 # Warning and Disclaimers
